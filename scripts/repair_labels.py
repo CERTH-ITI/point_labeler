@@ -30,7 +30,7 @@ def write_labels(filename, labels):
 def getPointCount(filename):
   num_points = 0
   byte_count = 4
-  if filename.endswith(".bin"): byte_count = 4 * 4  # 4 float
+  if filename.endswith(".bin"): byte_count =4 * 5  # 4 float
   if filename.endswith(".label"): byte_count = 4  # 1 float
 
   with open(filename, "rb") as f:

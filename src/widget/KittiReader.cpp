@@ -45,7 +45,7 @@ void KittiReader::initialize(const QString& directory) {
     if (!labels_dir.exists(filename)) {
       std::ifstream in(velodyne_filenames_[i].c_str());
       in.seekg(0, std::ios::end);
-      uint32_t num_points = in.tellg() / (4 * sizeof(float));
+      uint32_t num_points = in.tellg() / (5 * sizeof(float));
       in.close();
 
       std::ofstream out(labels_dir.filePath(filename).toStdString().c_str());
@@ -341,24 +341,27 @@ void KittiReader::readPoints(const std::string& filename, Laserscan& scan) {
   scan.clear();
 
   in.seekg(0, std::ios::end);
-  uint32_t num_points = in.tellg() / (4 * sizeof(float));
+  uint32_t num_points = in.tellg() / (5 * sizeof(float));
   in.seekg(0, std::ios::beg);
 
-  std::vector<float> values(4 * num_points);
-  in.read((char*)&values[0], 4 * num_points * sizeof(float));
+  std::vector<float> values(5 * num_points);
+  in.read((char*)&values[0], 5 * num_points * sizeof(float));
 
   in.close();
   std::vector<Point3f>& points = scan.points;
   std::vector<float>& remissions = scan.remissions;
+  std::vector<float>& rings = scan.rings;
 
   points.resize(num_points);
   remissions.resize(num_points);
+  rings.resize(num_points);
 
   for (uint32_t i = 0; i < num_points; ++i) {
-    points[i].x = values[4 * i];
-    points[i].y = values[4 * i + 1];
-    points[i].z = values[4 * i + 2];
-    remissions[i] = values[4 * i + 3];
+    points[i].x = values[5 * i];
+    points[i].y = values[5 * i + 1];
+    points[i].z = values[5 * i + 2];
+    remissions[i] = values[5 * i + 3];
+    rings[i] = values[5 * i + 4];
   }
 }
 

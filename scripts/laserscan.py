@@ -7,6 +7,7 @@ class Laserscan:
   def __init__(self):
     self.points = []
     self.remissions = []
+    self.rings = []
 
   def size(self):
     """ return the size of the point cloud. """

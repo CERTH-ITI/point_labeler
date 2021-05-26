@@ -33,16 +33,17 @@ def read_points(filename):
   contents = bytes()
   with open(filename, "rb") as f:  # rb = read binary
     f.seek(0, 2)  # move the cursor to the end of the file
-    num_points = int(f.tell() / 4)
+    num_points = int(f.tell() / 5)
     f.seek(0, 0)
     contents = f.read()
 
-  arr = [struct.unpack('<f', contents[4 * i:4 * i + 4])[0] for i in range(num_points)]
+  arr = [struct.unpack('<f', contents[4 * i:4 * i + 5])[0] for i in range(num_points)]
   points_arr = np.asarray(arr)  # convert list to array
 
   scan = Laserscan()
-  scan.points = [np.array([x, y, z, 1]) for (x, y, z) in zip(points_arr[0::4], points_arr[1::4], points_arr[2::4])]
-  scan.remissions = [r for r in points_arr[3::4]]
+  scan.points = [np.array([x, y, z, 1]) for (x, y, z) in zip(points_arr[0::5], points_arr[1::5], points_arr[2::5])]
+  scan.remissions = [r for r in points_arr[3::5]]
+  scan.rings = [r for r in points_arr[4::5]]
 
   # scan.x = points_arr[0::4]
   # scan.y = points_arr[1::4]
